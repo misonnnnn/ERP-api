@@ -15,10 +15,11 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'firstname' => 'required',
+            'middlename' => 'required',
+            'lastname' => 'required',
             'email' => 'required|email|unique:employees,email',
-            'position' => 'nullable'
+            'position_id' => 'nullable'
         ]);
 
         return response()->json(Employee::create($data), 201);
