@@ -16,11 +16,14 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
+        // return response()->json([
+        //     'access_token' => $token,
+        //     'token_type' => 'bearer',
+        //     'expires_in' => Auth::factory()->getTTL() * 60
+        // ]);
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => Auth::factory()->getTTL() * 60
-        ]);
+            'access_token' => $token
+        ])->cookie('token', $token, 60 * 24, '/', null, false, true);
     }
 
     public function me()
