@@ -15,6 +15,7 @@ Route::get('/run-artisan/{command}', function ($command) {
         'view:cache',
         'storage:link',
         'optimize',
+        'db:seed',
     ];
 
     if (! in_array($command, $allowed)) {
