@@ -7,9 +7,22 @@ use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Employee::all());
+        $search = $request->query('search');  
+        $perPage = $request->query('per_page', 10); 
+
+        $query = Employee::query();
+
+        if ($search) {
+            $query->where('firstname', 'like', "%{$search}%")
+                ->orWhere('lastname', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        }
+
+        return response()->json(
+            $query->orderBy('id', 'desc')->paginate($perPage)
+        );
     }
 
     public function store(Request $request)
