@@ -11,7 +11,7 @@ class FolderController extends Controller
 {
     public function index(Request $request)
     {
-        return Document::all();
+        return Folder::query()->orderby('id', 'desc')->get();
     }
 
     public function store(Request $request)
@@ -20,8 +20,22 @@ class FolderController extends Controller
             'name' => 'required',
         ]);
 
+        //if name is existing
+        $queryFolder = Folder::where('name', $request->name)->first();
+
+        if($queryFolder){
+            return response()->json([
+                'success' => false,
+                'message' => 'Folder name already existing!'
+            ], 503);
+        }
+
         $data['created_by'] = Auth::user()->id;
-        return response()->json(Folder::create($data), 201);
+        Folder::create($data);
+        return response()->json([
+            'success' => true,
+            'message' => 'Folder created successfully!'
+        ], 201);
     }
 
     public function show(Folder $employee)
