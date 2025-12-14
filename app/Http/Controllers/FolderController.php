@@ -10,14 +10,23 @@ use Illuminate\Support\Facades\Auth;
 class FolderController extends Controller
 {
     public function index(Request $request)
-    {
-        return Folder::query()->orderby('id', 'desc')->get();
+    {   
+        $query = Folder::query();
+        $parent_id = null;
+        if(isset($request->folder_parent_id) && !empty($request->folder_parent_id)){
+            $parent_id = $request->folder_parent_id;
+        }
+        $query->where('parent_id', $parent_id);
+
+        $query->orderby('id', 'desc');
+        return $query->get();
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'name' => 'required',
+            'parent_id' => 'nullable|integer'
         ]);
 
         //if name is existing
